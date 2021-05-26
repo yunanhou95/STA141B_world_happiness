@@ -1,0 +1,84 @@
+---
+title: "141b"
+author: "Yunan Hou"
+date: "2021/5/21"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(maps)
+library(ggplot2)
+library(RColorBrewer)
+library(tidyverse)
+setwd("D:\\00 Puji's files\\01 master plan\\10 Spring quarter\\STA141B\\archive")
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+data15=read.csv("2015.csv")
+data16=read.csv("2016.csv")
+data17=read.csv("2017.csv")
+data18=read.csv("2018.csv")
+data19=read.csv("2019.csv")
+data20=read.csv("world-happiness-report.csv")
+data21=read.csv("world-happiness-report-2021.csv")
+data910=read.csv("happiness_9&10.csv")
+data10c=read.csv("happiness_10_complete.csv")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+world_map <- map_data("world")
+
+data10c_20= subset(data10c, year == 2020)
+data910_20= subset(data910, year == 2020)
+world_map %>% 
+  left_join(data10c_20, by = c("region" = "Country.name")) -> act_world_map
+
+world_map %>% 
+  left_join(data910_20, by = c("region" = "Country.name")) -> act_world_map1
+
+mp <- ggplot(act_world_map, aes(x = long, y = lat, group = group)) +
+      geom_polygon(aes(fill= Life.Ladder), colour = "white") +
+      scale_x_continuous(breaks = seq(-180, 210, 45), labels = function(x){paste0(x, "°")}) +
+      scale_y_continuous(breaks = seq(-60, 100, 30), labels = function(x){paste0(x, "°")}) +
+      scale_fill_gradient(low = "lightblue", high="steel blue") +
+      labs(title="Happiness Score Around the World in 2020",
+      y="Latitude", x="Longitude") +
+      theme_light() 
+
+mp1 <- ggplot(act_world_map1, aes(x = long, y = lat, group = group)) +
+      geom_polygon(aes(fill= Life.Ladder), colour = "white") +
+      scale_x_continuous(breaks = seq(-180, 210, 45), labels = function(x){paste0(x, "°")}) +
+      scale_y_continuous(breaks = seq(-60, 100, 30), labels = function(x){paste0(x, "°")}) +
+      scale_fill_gradient(low = "lightblue", high="steel blue") +
+      labs(title="Happiness Score Around the World in 2020",
+      y="Latitude", x="Longitude") +
+      theme_light() 
+mp1
+```
+
+```{r, echo=FALSE}
+world_map %>% 
+  left_join(data21, by = c("region" = "Country.name")) -> act_world_map21
+
+mp2 <- ggplot(act_world_map21, aes(x = long, y = lat, group = group)) +
+      geom_polygon(aes(fill= Ladder.score), colour = "white") +
+      scale_x_continuous(breaks = seq(-180, 210, 45), labels = function(x){paste0(x, "°")}) +
+      scale_y_continuous(breaks = seq(-60, 100, 30), labels = function(x){paste0(x, "°")}) +
+      scale_fill_gradient(low = "lightblue", high="steel blue") +
+      labs(title="Happiness Score Around the World in 2021",
+      y="Latitude", x="Longitude") +
+      theme_light() 
+mp2
+```
